@@ -2,6 +2,7 @@ package com.dev.base;
 
 import com.dev.dao.UserMapper;
 import com.dev.utils.AssertUtil;
+import com.dev.vo.Role;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +107,7 @@ public abstract class BaseService<T,ID> {
         map.put("data",info.getList());
         return map;
     }
+
 
 
 }

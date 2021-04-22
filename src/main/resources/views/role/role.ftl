@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>用户管理</title>
+    <title>角色管理</title>
     <#include "../common.ftl">
 </head>
 <body class="childrenBody">
@@ -12,16 +12,8 @@
             <div class="layui-inline">
 
                 <div class="layui-input-inline">
-                    <input type="text" name="userName" class="layui-input searchVal" placeholder="用户名">
+                    <input type="text" name="roleName" class="layui-input searchVal" placeholder="角色名称">
                 </div>
-                <div class="layui-input-inline">
-                    <input type="text" name="phone" class="layui-input searchVal" placeholder="手机号">
-                </div>
-
-                <div class="layui-input-inline">
-                    <input type="text" name="email" class="layui-input searchVal" placeholder="邮箱">
-                </div>
-
 
                 <a class="layui-btn search_btn" data-type="reload">
                     <i class="layui-icon">&#xe615;</i>搜索
@@ -31,11 +23,11 @@
         </form>
     </blockquote>
 
-    <table id="userList" class="layui-table" lay-filter="users"></table>
+    <table id="roleList" class="layui-table" lay-filter="roles"></table>
 
 
     <#-- 操作工具栏 -->
-    <script type="text/html" id="userListBar">
+    <script type="text/html" id="roleListBar">
         <a class="layui-btn layui-btn-xs" id="edit" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
     </script>
@@ -45,15 +37,15 @@
         <div class="layui-btn-container">
             <a class="layui-btn layui-btn-normal addNews_btn" lay-event="add">
                 <i class="layui-icon">&#xe608;</i>
-                添加用户
+                添加角色
             </a>
-            <a class="layui-btn layui-bg-red delNews_btn" lay-event="delete">
-                <i class="layui-icon">&#xe608;</i>
-                删除用户
+            <a class="layui-btn layui-bg-orange delNews_btn" lay-event="grant">
+                <i class="layui-icon">&#xe672;</i>
+                授权
             </a>
         </div>
     </script>
 </form>
-<script type="text/javascript" src="${ctx}/js/user/user.js"></script>
+    <script type="text/javascript" src="${ctx}/js/role/role.js"></script>
 </body>
 </html>

@@ -10,4 +10,9 @@ public interface RoleMapper extends BaseMapper<Role,Integer> {
 
     // 查询所有的角色列表
     List<Map<String,Object>> queryAllRoles(Integer userId);
+
+    Role selectByRoleName(String roleName);
+
+    // 逻辑删除
+    int deleteRole(Integer id);
 }

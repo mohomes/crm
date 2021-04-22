@@ -154,7 +154,7 @@ public class UserService extends BaseService<User,Integer> {
         // 根据用户id查询角色记录
         int count =userRoleMapper.countUserRoleByUserId(userId);
         // 判断用户角色记录是否存在
-        if (count>0) {
+        if (count > 0) {
             AssertUtil.isTrue(userRoleMapper.deleteUserRoleByUserId(userId)!=count,"用户角色分配失败");
         }
         //
@@ -202,6 +202,16 @@ public class UserService extends BaseService<User,Integer> {
     public void deleteByIds(Integer[] ids){
         AssertUtil.isTrue(null==ids || ids.length==0,"待删除记录不存在");
         AssertUtil.isTrue(userMapper.deleteBatch(ids)!=ids.length,"用户数据删除失败" );
+
+        // 遍历用户ID的数组
+        for (Integer userId : ids) {
+            // 通过用户id查询对应的用户角色记录
+            int count = userRoleMapper.countUserRoleByUserId(userId);
+            if (count>0){
+                // 通过用户ID删除对应的用户角色数据
+                AssertUtil.isTrue(userRoleMapper.deleteUserRoleByUserId(userId)!=count,"删除用户失败");
+            }
+        }
     }
 
     /**
