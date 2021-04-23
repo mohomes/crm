@@ -121,4 +121,28 @@
     WHERE
         tr.is_valid = 1;
   </select>
+
+    <select id="selectByParams" parameterType="com.dev.query.RoleQuery" resultType="com.dev.vo.Role">
+        select <include refid="Base_Column_List"/>
+        from t_role
+        <where>
+            is_valid =1
+            <if test="roleName != null and roleName !='' ">
+                AND role_name like concat('%',#{roleName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByRoleName" parameterType="string" resultType="com.dev.vo.Role">
+        select <include refid="Base_Column_List"/>
+        from t_role
+        where is_valid =1
+        and role_name = #{roleName}
+    </select>
+
+    <update id="deleteRole" parameterType="int">
+        update t_role
+        set is_valid = 0,update_date = now()
+        where id=#{id}
+    </update>
 </mapper>

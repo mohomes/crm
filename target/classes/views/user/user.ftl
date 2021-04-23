@@ -45,11 +45,11 @@
         <div class="layui-btn-container">
             <a class="layui-btn layui-btn-normal addNews_btn" lay-event="add">
                 <i class="layui-icon">&#xe608;</i>
-                添加
+                添加用户
             </a>
-            <a class="layui-btn layui-btn-normal delNews_btn" lay-event="delete">
+            <a class="layui-btn layui-bg-red delNews_btn" lay-event="delete">
                 <i class="layui-icon">&#xe608;</i>
-                删除
+                删除用户
             </a>
         </div>
     </script>
