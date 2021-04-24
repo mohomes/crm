@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 御风
@@ -32,6 +33,17 @@ public class ModuleController extends BaseController {
     @ResponseBody
     public List<TreeDto> queryAllModules(Integer roleId){
         return moduleService.queryAllModules(roleId);
+    }
+
+    @RequestMapping("list")
+    @ResponseBody
+    public Map<String,Object> queryModuleList(){
+        return moduleService.queryModuleList();
+    }
+
+    @RequestMapping("index")
+    public String index(){
+        return "module/module";
     }
 
 }
