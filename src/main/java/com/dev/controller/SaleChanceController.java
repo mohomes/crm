@@ -1,5 +1,6 @@
 package com.dev.controller;
 
+import com.dev.annoation.RequiredPermission;
 import com.dev.base.BaseController;
 import com.dev.base.ResultInfo;
 import com.dev.enums.StateStatus;
@@ -37,6 +38,7 @@ public class SaleChanceController extends BaseController {
      *
      * @return
      */
+
     @RequestMapping("index")
     public String index(){
         return "saleChance/sale_chance";
@@ -57,6 +59,7 @@ public class SaleChanceController extends BaseController {
         return saleChanceService.querySaleChanceByParams(saleChanceQuery);
     }
 
+    @RequiredPermission(code = "101002")
     @PostMapping("add")
     @ResponseBody
     public ResultInfo addSaleChance(SaleChance saleChance, HttpServletRequest request){
@@ -67,6 +70,7 @@ public class SaleChanceController extends BaseController {
         return success("数据添加成功");
     }
 
+    @RequiredPermission(code = "101004")
     @PostMapping("update")
     @ResponseBody
     public ResultInfo updateSaleChance(SaleChance saleChance){
