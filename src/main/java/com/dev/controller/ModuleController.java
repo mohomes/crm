@@ -4,6 +4,8 @@ import com.dev.base.BaseController;
 import com.dev.model.TreeDto;
 import com.dev.service.ModuleService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -26,10 +28,10 @@ public class ModuleController extends BaseController {
     private ModuleService moduleService;
 
 
-    @RequestMapping("queryAllModules")
+    @GetMapping("queryAllModules")
     @ResponseBody
-    public List<TreeDto> queryAllModules(){
-        return moduleService.queryAllModules();
+    public List<TreeDto> queryAllModules(Integer roleId){
+        return moduleService.queryAllModules(roleId);
     }
 
 }

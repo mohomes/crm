@@ -2,6 +2,7 @@ package com.dev;
 
 import com.alibaba.fastjson.JSON;
 import com.dev.base.ResultInfo;
+import com.dev.exceptions.AuthException;
 import com.dev.exceptions.NoLoginException;
 import com.dev.exceptions.ParamsException;
 import org.springframework.stereotype.Component;
@@ -64,7 +65,7 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
          */
         ModelAndView modelAndView = new ModelAndView("error");
         modelAndView.addObject("code",500);
-        modelAndView.addObject("msg","异常出现，请重试...");
+        modelAndView.addObject("msg","系统异常，请重试...");
 
         if (o instanceof HandlerMethod){
             // 类型转换
@@ -81,22 +82,31 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
                     ParamsException exception = (ParamsException) e;
                     modelAndView.addObject("code",exception.getCode());
                     modelAndView.addObject("msg",exception.getMsg());
-                    return modelAndView;
+
+                }else if(e instanceof AuthException){
+                    AuthException exception = (AuthException) e;
+                    modelAndView.addObject("code",exception.getCode());
+                    modelAndView.addObject("msg",exception.getMsg());
                 }
+                return modelAndView;
+
             }else{
                 /**
                  * 返回数据
                  */
                 ResultInfo resultInfo = new ResultInfo();
                 resultInfo.setCode(500);
-                resultInfo.setMsg("异常出现，请重试！");
+                resultInfo.setMsg("系统异常，请重试！");
 
                 if (e instanceof ParamsException){
                     ParamsException exception = (ParamsException) e;
                     resultInfo.setCode(exception.getCode());
                     resultInfo.setMsg(exception.getMsg());
+                }else if(e instanceof AuthException){
+                    AuthException exception = (AuthException) e;
+                    resultInfo.setCode(exception.getCode());
+                    resultInfo.setMsg(exception.getMsg());
                 }
-
                 // 设置响应类型及编码格式 （响应JSON格式数据）
                 httpServletResponse.setContentType("application/json;charset=UTF-8");
                 // 得到字符输出流

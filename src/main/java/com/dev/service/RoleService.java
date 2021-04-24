@@ -1,17 +1,23 @@
 package com.dev.service;
 
 import com.dev.base.BaseService;
+import com.dev.dao.ModuleMapper;
+import com.dev.dao.PermissionMapper;
 import com.dev.dao.RoleMapper;
 import com.dev.query.RoleQuery;
 import com.dev.utils.AssertUtil;
+import com.dev.vo.Module;
+import com.dev.vo.Permission;
 import com.dev.vo.Role;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +35,12 @@ public class RoleService extends BaseService<Role,Integer> {
 
     @Resource
     private RoleMapper roleMapper;
+
+    @Resource
+    private PermissionMapper permissionMapper;
+
+    @Resource
+    private ModuleMapper moduleMapper;
 
 
     public List<Map<String,Object>> queryAllRoles(Integer userId){
@@ -79,8 +91,38 @@ public class RoleService extends BaseService<Role,Integer> {
         AssertUtil.isTrue(roleMapper.deleteRole(role.getId())<1,"角色记录删除失败");
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void addGrant(Integer roleId, Integer[] mIds) {
+        // 非空判断
+        AssertUtil.isTrue(roleId==null,"角色不存在，请重新选择");
+        // 判断角色存在
+        Role role = roleMapper.selectByPrimaryKey(roleId);
+        AssertUtil.isTrue(role==null,"角色不存在！");
 
+        // 先判断角色是否拥有资源
+        Integer count = permissionMapper.countPermissionByRoleId(roleId);
+        // 如果原本有资源数据 ，则先删除
+        if (count>0) {
+            // 删除指定角色资源
+            AssertUtil.isTrue(permissionMapper.deletePermissionByRoleId(roleId)!=count,"角色授权失败");
+        }
 
+        // 角色添加授权
+        // 得到要添加的权限列表
+        if (mIds!=null && mIds.length>0){
+            List<Permission> list = new ArrayList<Permission>();
+            for (Integer mId : mIds) {
+                Permission permission = new Permission();
+                permission.setModuleId(mId);
+                permission.setRoleId(roleId);
+                permission.setCreateDate(new Date());
+                permission.setUpdateDate(new Date());
+                Module module = moduleMapper.selectByPrimaryKey(mId);
+                permission.setAclValue(module.getOptValue());
+                list.add(permission);
+            }
 
-
+        AssertUtil.isTrue(permissionMapper.addPermissions(list)!=list.size(),"角色授权失败");
+        }
+    }
 }

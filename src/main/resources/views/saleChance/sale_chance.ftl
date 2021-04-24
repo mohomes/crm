@@ -7,6 +7,7 @@
 <body class="childrenBody">
 
 <form class="layui-form">
+    <#if permissions?seq_contains("101001")>
     <blockquote class="layui-elem-quote quoteBox">
         <form class="layui-form">
             <div class="layui-inline">
@@ -33,27 +34,36 @@
             </div>
         </form>
     </blockquote>
-
+    </#if>
     <table id="saleChanceList" class="layui-table" lay-filter="saleChances"></table>
 
 
     <#-- 操作工具栏 -->
     <script type="text/html" id="saleChanceListBar">
+        <#if permissions?seq_contains("101004")>
+
         <a class="layui-btn layui-btn-xs" id="edit" lay-event="edit">编辑</a>
+        </#if>
+        <#if permissions?seq_contains("101003")>
         <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+        </#if>
     </script>
 
     <#-- 头部工具栏 -->
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
+            <#if permissions?seq_contains("101002")>
             <a class="layui-btn layui-btn-normal addNews_btn" lay-event="add">
                 <i class="layui-icon">&#xe608;</i>
                 添加
             </a>
+            </#if>
+            <#if permissions?seq_contains("101003")>
             <a class="layui-btn layui-btn-normal delNews_btn" lay-event="delete">
                 <i class="layui-icon">&#xe608;</i>
                 删除
             </a>
+            </#if>
         </div>
     </script>
 </form>

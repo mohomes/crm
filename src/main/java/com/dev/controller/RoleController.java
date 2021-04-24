@@ -88,4 +88,11 @@ public class RoleController extends BaseController {
         request.setAttribute("roleId",roleId);
         return "role/grant";
     }
+
+    @PostMapping("addGrant")
+    @ResponseBody
+    public ResultInfo addGrant(Integer roleId,Integer[] mIds){
+        roleService.addGrant(roleId,mIds);
+        return success("角色授权成功");
+    }
 }

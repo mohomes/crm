@@ -33,6 +33,10 @@ public class SaleChanceController extends BaseController {
     @Resource
     private SaleChanceService saleChanceService;
 
+    /**
+     *
+     * @return
+     */
     @RequestMapping("index")
     public String index(){
         return "saleChance/sale_chance";
