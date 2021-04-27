@@ -30,7 +30,6 @@
             </div>
         </form>
     </blockquote>
-
     <table id="userList" class="layui-table" lay-filter="users"></table>
 
 
