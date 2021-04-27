@@ -5,4 +5,5 @@ import com.dev.vo.Customer;
 
 public interface CustomerMapper extends BaseMapper<Customer,Integer> {
 
+    Customer queryCustomerName(String name);
 }
