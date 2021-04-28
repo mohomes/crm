@@ -56,7 +56,29 @@ public class CustomerService extends BaseService<Customer,Integer> {
         customer.setUpdateDate(new Date());
         String khno ="KH"+System.currentTimeMillis();
         customer.setKhno(khno);
+        customer.setState(0);
         AssertUtil.isTrue(customerMapper.insertSelective(customer)<1,"客户信息添加失败");
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateCustomer(Customer customer){
+        AssertUtil.isTrue(null==customer.getId(),"待更新记录不存在");
+        Customer temp = customerMapper.selectByPrimaryKey(customer.getId());
+        checkCustomerName(customer.getName(),customer.getFr(),customer.getPhone());
+        temp = customerMapper.queryCustomerName(customer.getName());
+        // 判断客户记录 是否存在 且客户id是否与更新记录的id一致
+        AssertUtil.isTrue(null!=temp &&!(temp.getId().equals(customer.getId())),"客户名称已存在，请重试");
+        customer.setUpdateDate(new Date());
+        AssertUtil.isTrue(customerMapper.updateByPrimaryKeySelective(customer)<1,"更新客户信息失败");
+    }
+
+    public void deleteCustomer(Integer id){
+        AssertUtil.isTrue(null==id,"待删除记录不存在");
+        Customer customer = customerMapper.selectByPrimaryKey(id);
+        AssertUtil.isTrue(null==customer,"带删除记录不存在");
+        customer.setUpdateDate(new Date());
+        customer.setIsValid(0);
+        AssertUtil.isTrue(customerMapper.updateByPrimaryKeySelective(customer)<1,"删除失败");
     }
 
     private void checkCustomerName(String name, String fr, String phone) {

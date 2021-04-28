@@ -60,66 +60,69 @@ layui.use(['table','layer'],function () {
 
     table.on('toolbar(customers)',function (data) {
         if (data.event==='add'){
-            openRoleDialog();
-        }else if(data.event==='grant'){
+            openAddOrUpdateCustomerDialog();
+        }else if(data.event==="order"){
+            // 获取选中的订单信息
+
             var checkStatus = table.checkStatus(data.config.id)
-            openRoleGrantPage(checkStatus);
+            console.log(checkStatus)
+            openCustomerOrderDialog(checkStatus.data)
         }
     })
 
-    function openRoleGrantPage(data){
-        console.log(data)
-        // 判断用户是否选择了角色记录
-        if (data.data.length==0){
-            layer.msg("请选择要授权的角色",{icon:5})
+    /**
+     * 打开指定用户的订单
+     * @param data
+     */
+    function openCustomerOrderDialog(data){
+        if(data.length==0){
+            layer.msg("请选择查看订单的客户",{icon:5})
             return;
         }
-        if (data.data.length>1){
-            layer.msg("暂不支持批量授权",{icon:5})
+
+        if (data.length>1){
+            layer.msg("暂不支持批量查看",{icon:5})
             return;
         }
-        var title = "<h2>角色管理 - 授权菜单</h2>"
-        var url = ctx + "/role/toGrantRolePage?roleId="+data.data[0].id
+        var url = ctx +"/customer/toCustomerOrderPage?customerId="+data[0].id
         layui.layer.open({
             type: 2,
-            title: title,
-            area: ['400px', '500px'],
+            title: '<h3>客户管理 - 查看订单信息</h3>',
+            area: ['700px', '500px'],
             content: url //iframe的url
             ,maxmin: true // 最大化和最小化
         });
     }
 
+    function openAddOrUpdateCustomerDialog(id){
+        var title = "<h2>客户管理 - 添加客户</h2>"
+        var url = ctx + "/customer/toAddOrUpdateCustomerPage"
 
-    function openRoleDialog(roleId){
-        var url = ctx + "/role/toAddOrUpdateRolePage"
-        //iframe层
-        var title = "<h2>角色管理 - 添加角色信息</h2>"
-        if (roleId!=null && roleId!=''){
-            title = "<h2>角色管理 - 更新角色信息</h2>"
-            url += '?roleId='+roleId;
+        if (null!=id){
+            title = "<h2>客户管理 - 更新客户信息</h2>"
+            url=ctx + "/customer/toAddOrUpdateCustomerPage?id="+id
         }
-
 
         layui.layer.open({
             type: 2,
             title: title,
-            area: ['500px', '400px'],
+            area: ['700px', '500px'],
             content: url //iframe的url
             ,maxmin: true // 最大化和最小化
         });
     }
+
 
     table.on('tool(customers)',function (obj) {
         var data = obj.data
         if(obj.event === "edit"){  // 编辑操作
-            var roleId = data.id;
-            openRoleDialog(roleId)
+            openAddOrUpdateCustomerDialog(data.id);
         }else if(obj.event === "del"){
-            layer.confirm("是否确认删除这条记录吗？",{icon:3,title:"角色管理"},function (index) {
+            layer.confirm("是否确认删除这条记录吗？",{icon:3,title:"客户管理"},function (index) {
                 layer.close(index)
                 $.ajax({
                     type:"POST",
-                    url:ctx + "/role/delete",
+                    url:ctx + "/customer/delete",
                     data:{
                         id:data.id
                     },

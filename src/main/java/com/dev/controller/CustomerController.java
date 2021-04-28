@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -49,5 +50,39 @@ public class CustomerController extends BaseController {
     public ResultInfo addCustomer(Customer customer){
         customerService.addCustomer(customer);
         return success("客户信息添加成功");
+    }
+
+    /**
+     * 更新客户信息
+     * @param customer
+     * @return
+     */
+    @PostMapping("update")
+    @ResponseBody
+    public ResultInfo updateCustomer(Customer customer){
+        customerService.updateCustomer(customer);
+        return success("更新数据信息成功");
+    }
+
+    @PostMapping("delete")
+    @ResponseBody
+    public ResultInfo deleteCustomer(Integer id){
+        customerService.deleteCustomer(id);
+        return success("删除成功");
+    }
+
+    @RequestMapping("toAddOrUpdateCustomerPage")
+    public String toAddOrUpdateCustomerPage(Integer id, HttpServletRequest request){
+        if (null!=id){
+            Customer customer = customerService.selectByPrimaryKey(id);
+            request.setAttribute("customer",customer);
+        }
+        return "customer/add_update";
+    }
+
+    @RequestMapping("toCustomerOrderPage")
+    public String toCustomerOrderPage(Integer customerId,HttpServletRequest request){
+        request.setAttribute("customer",customerService.selectByPrimaryKey(customerId));
+        return "customer/customer_order";
     }
 }
