@@ -170,4 +170,12 @@
         </where>
 
   </select>
+  <!--查询客户订单的最后一条记录-->
+  <select id="queryLossCustomerByCusId" resultType="com.dev.vo.CustomerOrder">
+        select * from
+         t_customer_order
+        where is_valid =1
+        and cus_id = #{cusId}
+        order by order_date desc limit 1
+  </select>
 </mapper>

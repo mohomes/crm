@@ -65,10 +65,59 @@ layui.use(['table','layer'],function () {
             // 获取选中的订单信息
 
             var checkStatus = table.checkStatus(data.config.id)
-            console.log(checkStatus)
             openCustomerOrderDialog(checkStatus.data)
+        }else if(data.event==="link"){
+            var checkStatus = table.checkStatus(data.config.id)
+            openCustomerLinkPage(checkStatus.data)
+        }else if(data.event=="recode"){
+            var checkStatus = table.checkStatus(data.config.id)
+            openCustomerContactPage(checkStatus.data)
         }
     })
+
+    function openCustomerLinkPage(data){
+        if(data.length==0){
+            layer.msg("请选择查看联系人的客户",{icon:5})
+            return;
+        }
+
+        if (data.length>1){
+            layer.msg("暂不支持批量查看",{icon:5})
+            return;
+        }
+        var url = ctx +"/linkman/toCustomerLinkPage?cusId="+data[0].id
+        layui.layer.open({
+            type: 2,
+            title: '<h3>客户管理 - 查看联系人</h3>',
+            area: ['700px', '500px'],
+            content: url //iframe的url
+            ,maxmin: true // 最大化和最小化
+        });
+    }
+
+    /**
+     * 打开交往记录页面
+     * @param data
+     */
+    function openCustomerContactPage(data){
+        if(data.length==0){
+            layer.msg("请选择查看交往记录的客户",{icon:5})
+            return;
+        }
+
+        if (data.length>1){
+            layer.msg("暂不支持批量查看",{icon:5})
+            return;
+        }
+        var url = ctx +"/contact/toCustomerContactPage?cusId="+data[0].id
+        layui.layer.open({
+            type: 2,
+            title: '<h3>客户管理 - 查看交往记录</h3>',
+            area: ['700px', '500px'],
+            content: url //iframe的url
+            ,maxmin: true // 最大化和最小化
+        });
+    }
 
     /**
      * 打开指定用户的订单

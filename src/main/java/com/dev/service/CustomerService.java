@@ -1,11 +1,15 @@
 package com.dev.service;
 
 import com.dev.base.BaseService;
+import com.dev.dao.CustomerLossMapper;
 import com.dev.dao.CustomerMapper;
+import com.dev.dao.CustomerOrderMapper;
 import com.dev.query.CustomerQuery;
 import com.dev.utils.AssertUtil;
 import com.dev.utils.PhoneUtil;
 import com.dev.vo.Customer;
+import com.dev.vo.CustomerLoss;
+import com.dev.vo.CustomerOrder;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 御风
@@ -30,6 +32,12 @@ import java.util.Map;
 public class CustomerService extends BaseService<Customer,Integer> {
     @Resource
     private CustomerMapper customerMapper;
+
+    @Resource
+    private CustomerOrderMapper customerOrderMapper;
+
+    @Resource
+    private CustomerLossMapper customerLossMapper;
 
     public Map<String,Object> queryCustomerByParams(CustomerQuery customerQuery){
         Map<String, Object> map = new HashMap<>();
@@ -86,5 +94,46 @@ public class CustomerService extends BaseService<Customer,Integer> {
         AssertUtil.isTrue(customerMapper.queryCustomerName(name)!=null,"客户名称重复");
         AssertUtil.isTrue(StringUtils.isBlank(fr),"法人代表不能为空");
         AssertUtil.isTrue(!PhoneUtil.isMobile(phone),"手机号码格式不正确");
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void customerLoss(){
+
+        List<Customer> lossCustomers = customerMapper.queryLossCustomer();
+        if (lossCustomers!=null && lossCustomers.size()>0){
+            //
+            List<Integer> lossCusIds = new ArrayList<>();
+            // 定义一个集合用于接收流失客户的列表
+            List<CustomerLoss> lossList = new ArrayList<>();
+            lossCustomers.forEach(customer->{
+                CustomerLoss loss = new CustomerLoss();
+                loss.setCreateDate(new Date());
+                // 客户编号
+                loss.setCusNo(customer.getKhno());
+                // 客户经理
+                loss.setCusManager(customer.getCusManager());
+                // 客户名称
+                loss.setCusName(customer.getName());
+                //
+                loss.setIsValid(1);
+                loss.setUpdateDate(new Date());
+                // 客户流失状态 0=暂缓流失状态 1=确认流失状态
+                loss.setState(0);
+                // 客户最后下单时间
+                // 通过客户id查询最后的订单记录（最后一条）
+                CustomerOrder customerOrder = customerOrderMapper.queryLossCustomerByCusId(customer.getId());
+                // 如果客户存在 则设置客户的最后下单时间
+                if (customerOrder!=null){
+                    loss.setConfirmLossTime(customerOrder.getOrderDate());
+                }
+                lossList.add(loss);
+                // 将对应的流失id设置到对应的集合中
+                lossCusIds.add(customer.getId());
+            });
+            AssertUtil.isTrue(customerLossMapper.insertBatch(lossList)!=lossList.size(),"客户流失记录转移失败");
+            /*批量更新客户的流失状态*/
+            AssertUtil.isTrue(customerMapper.updateStateByCusIds(lossCusIds)!=lossCusIds.size(),"客户流失记录转移失败");
+        }
+
     }
 }

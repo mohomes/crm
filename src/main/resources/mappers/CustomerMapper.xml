@@ -303,4 +303,34 @@
      is_valid =1
      and name = #{name}
   </select>
+  <!--查询待流失的客户-->
+
+  <select id="queryLossCustomer" resultType="com.dev.vo.Customer">
+    select
+        *
+    from
+        t_customer c
+    where
+        c.is_valid = 1
+    and
+        c.state=0
+    and
+        DATE_ADD(c.create_date,INTERVAL 6 MONTH) &lt; now()
+    and
+        c.id
+    not in
+        (select distinct cus_id from t_customer_order o
+    where
+        o.is_valid = 1 and o.state = 1 and
+    date_add(o.order_date,INTERVAL 6 MONTH) &gt; now());
+  </select>
+  <!-- 批量更新客户的流失状态 -->
+  <update id="updateStateByCusIds">
+        update t_customer set state = 1
+        where id in
+        <foreach collection="list" separator=","  open="(" close=")" item="item">
+            #{item}
+        </foreach>
+  </update>
 </mapper>
+
