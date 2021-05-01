@@ -165,10 +165,28 @@
   <insert id="insertBatch">
         insert into t_customer_loss(cus_no, cus_name, cus_manager, last_order_time, confirm_loss_time, state, loss_reason,
     is_valid, create_date, update_date)
+    values
         <foreach collection="list" separator="," item="item">
-            (#{item.cusNo},#{item.cusName},#{item.cusManager},#{item.lastOrderTime}
-            #{item.confirmLossTime},#{item.state},#{item.lossReason},#{item.isValid},
-            #{item.createDate},#{item.updateDate})
+            (#{item.cusNo},#{item.cusName},#{item.cusManager},#{item.lastOrderTime},#{item.confirmLossTime},#{item.state},#{item.lossReason},#{item.isValid},#{item.createDate},#{item.updateDate})
         </foreach>
   </insert>
+
+  <select id="selectByParams" parameterType="com.dev.query.CustomerLossQuery" resultType="com.dev.vo.CustomerLoss">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            t_customer_loss
+        <where>
+            is_valid = 1
+            <if test="cusNo!=null and cusNo!=''">
+              and cus_no = #{cusNo}
+            </if>
+             <if test="cusName!=null and cusName!=''">
+               and cus_name like concat('%',#{cusName},'%')
+             </if>
+             <if test="state!=null">
+               and state = #{state}
+             </if>
+        </where>
+  </select>
 </mapper>
