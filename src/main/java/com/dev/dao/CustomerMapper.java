@@ -1,9 +1,11 @@
 package com.dev.dao;
 
 import com.dev.base.BaseMapper;
+import com.dev.query.CustomerQuery;
 import com.dev.vo.Customer;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CustomerMapper extends BaseMapper<Customer,Integer> {
 
@@ -21,4 +23,9 @@ public interface CustomerMapper extends BaseMapper<Customer,Integer> {
      * @return
      */
     int updateStateByCusIds(List<Integer> lossCusIds);
+
+    // 查询客户贡献数据
+    List<Map<String,Object>> queryCustomerContributionByParams(CustomerQuery customerQuery);
+    // 查询客户构成
+    List<Map<String,Object>> countCustomerMake();
 }

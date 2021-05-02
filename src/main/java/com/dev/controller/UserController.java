@@ -100,6 +100,12 @@ public class UserController extends BaseController {
         return userService.queryAllSales();
     }
 
+    @RequestMapping("queryAllManager")
+    @ResponseBody
+    public List<Map<String,Object>> queryAllManagers(){
+        return userService.queryAllManagers();
+    }
+
     @RequestMapping("toPasswordPage")
     public String toPasswordPage(){
         return "user/password";

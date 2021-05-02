@@ -85,4 +85,26 @@ public class CustomerController extends BaseController {
         request.setAttribute("customer",customerService.selectByPrimaryKey(customerId));
         return "customer/customer_order";
     }
+
+    @RequestMapping("queryContribute")
+    @ResponseBody
+    public Map<String,Object> queryCustomerContributionByParams(CustomerQuery customerQuery){
+        return customerService.queryCustomerContributionByParams(customerQuery);
+    }
+
+    /**
+     * 折线图
+     * @return
+     */
+    @RequestMapping("countCustomerMake")
+    @ResponseBody
+    public Map<String,Object> countCustomerMake(){
+        return customerService.countCustomerMake();
+    }
+
+    @RequestMapping("countCustomerMake02")
+    @ResponseBody
+    public Map<String,Object> countCustomerMake02(){
+        return customerService.countCustomerMake02();
+    }
 }

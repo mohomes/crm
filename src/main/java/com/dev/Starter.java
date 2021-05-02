@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *
  */
 @MapperScan(basePackages = "com.dev.dao")
-@EnableScheduling
+@EnableScheduling  //开启定时任务环境配置
 @SpringBootApplication
 public class Starter
 {

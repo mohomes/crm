@@ -19,4 +19,10 @@ public interface UserMapper extends BaseMapper<User,Integer> {
      * @return
      */
     List<Map<String,Object>> queryAllSales();
+
+    /**
+     * 查询所有的客户经理
+     * @return
+     */
+    List<Map<String, Object>> queryAllManagers();
 }

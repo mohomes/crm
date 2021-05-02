@@ -121,6 +121,10 @@ public class UserService extends BaseService<User,Integer> {
         return userMapper.queryAllSales();
     }
 
+    public List<Map<String,Object>> queryAllManagers(){
+        return userMapper.queryAllManagers();
+    }
+
     /**
      * 1、参数校验
      *      用户名 唯一性

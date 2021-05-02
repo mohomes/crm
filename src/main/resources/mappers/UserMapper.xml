@@ -176,6 +176,27 @@
             tr.role_name = '销售';
   </select>
 
+  <select id="queryAllManagers" resultType="java.util.Map">
+        SELECT
+            u.id,u.user_name uname
+        FROM
+            t_user_info u
+        LEFT JOIN
+            t_user_role ur
+        ON
+            u.id = ur.user_id
+        LEFT JOIN
+            t_role tr
+        ON
+            tr.id = ur.role_id
+        WHERE
+            u.is_valid = 1
+        AND
+            tr.is_valid = 1
+        AND
+            tr.role_name = '客户经理';
+  </select>
+
   <!--多条件查询-->
   <select id="selectByParams" resultType="com.dev.vo.User" parameterType="com.dev.query.UserQuery">
     SELECT

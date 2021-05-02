@@ -15,6 +15,26 @@ public class CustomerQuery extends BaseQuery {
     private String customerNo; // 客户编号
     private String level; // 客户级别
 
+    private String time; // 订单时间
+
+    private Integer type;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public String getCustomerName() {
         return customerName;
     }

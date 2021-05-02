@@ -136,4 +136,59 @@ public class CustomerService extends BaseService<Customer,Integer> {
         }
 
     }
+
+    public Map<String,Object> queryCustomerContributionByParams(CustomerQuery customerQuery){
+        Map<String, Object> map = new HashMap<>();
+        PageHelper.startPage(customerQuery.getPage(),customerQuery.getLimit());
+        PageInfo<Map<String,Object>> info =
+                new PageInfo<Map<String,Object>>(customerMapper.queryCustomerContributionByParams(customerQuery));
+        map.put("code",0);
+        map.put("msg","success");
+        map.put("count",info.getTotal());
+        map.put("data",info.getList());
+        return map;
+    }
+
+
+    public Map<String,Object> countCustomerMake(){
+        Map<String, Object> map = new HashMap<>();
+        List<Map<String, Object>> maps = customerMapper.countCustomerMake();
+        ArrayList<String> data1 = new ArrayList<>();
+        ArrayList<String> data2 = new ArrayList<>();
+
+        if (maps!=null && maps.size()>0) {
+            maps.forEach(m->{
+                data1.add(m.get("level").toString());
+                // total 数据设置到Y轴上
+                data2.add(m.get("total").toString());
+            });
+        }
+
+        map.put("data1",data1);
+        map.put("data2",data2);
+        return map;
+    }
+
+    public Map<String, Object> countCustomerMake02() {
+        Map<String, Object> map = new HashMap<>();
+        List<Map<String, Object>> maps = customerMapper.countCustomerMake();
+        // 饼状图数据 数组（字符串对象）
+        ArrayList<String> data1 = new ArrayList<>();
+        // 数组（对象）
+        ArrayList<Map<String,Object>> data2 = new ArrayList<>();
+
+        if (maps!=null && maps.size()>0) {
+            maps.forEach(m->{
+                data1.add(m.get("level").toString());
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("name",m.get("level"));
+                hashMap.put("value",m.get("total"));
+                data2.add(hashMap);
+            });
+        }
+
+        map.put("data1",data1);
+        map.put("data2",data2);
+        return map;
+    }
 }
